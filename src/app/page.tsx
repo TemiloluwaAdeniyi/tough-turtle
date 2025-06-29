@@ -2,19 +2,18 @@
 
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabase';
 
 export default function Home() {
   const [isBlinking, setIsBlinking] = useState(false);
   const [mood, setMood] = useState('determined');
 
   useEffect(() => {
-    // Random blinking animation
     const blinkInterval = setInterval(() => {
       setIsBlinking(true);
       setTimeout(() => setIsBlinking(false), 150);
     }, 2000 + Math.random() * 3000);
 
-    // Random mood changes
     const moodInterval = setInterval(() => {
       const moods = ['determined', 'focused', 'pumped', 'resilient', 'beast_mode'];
       setMood(moods[Math.floor(Math.random() * moods.length)]);
@@ -26,10 +25,38 @@ export default function Home() {
     };
   }, []);
 
-  const handleLogin = () => {
-    // Using React state instead of localStorage for artifact compatibility
-    window.location.href = '/dashboard';
+  const handleLogin = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: `${window.location.origin}/dashboard` },
+    });
+    if (error) {
+      console.error('Login error:', error);
+      alert('Login failed. Try again.');
+      return;
+    }
+    // On successful login, Supabase redirects to /dashboard
   };
+
+  useEffect(() => {
+    // Initialize user in database on first login
+    const initUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data } = await supabase
+          .from('users')
+          .select('id')
+          .eq('id', user.id)
+          .single();
+        if (!data) {
+          await supabase
+            .from('users')
+            .insert({ id: user.id, username: user.email || 'User' });
+        }
+      }
+    };
+    initUser();
+  }, []);
 
   const getEyeExpression = () => {
     if (isBlinking) return 'M';
@@ -63,7 +90,6 @@ export default function Home() {
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 1, delay: 0.3 }}
       >
-        {/* Floating elements */}
         <motion.div
           className="absolute -top-6 -left-6 text-orange-400 text-3xl"
           animate={{ 
@@ -112,10 +138,7 @@ export default function Home() {
             ease: "easeInOut" 
           }}
         >
-          {/* Shadow */}
           <ellipse cx="100" cy="185" rx="45" ry="12" fill="rgba(0,0,0,0.3)" />
-          
-          {/* Shell - more angular and robust */}
           <motion.path
             d="M100 70 L140 95 L135 140 L100 155 L65 140 L60 95 Z"
             fill="url(#toughShellGradient)"
@@ -126,17 +149,11 @@ export default function Home() {
             }}
             transition={{ duration: 0.8, repeat: Infinity }}
           />
-          
-          {/* Shell armor plates */}
           <path d="M85 85 L100 75 L115 85 L100 100 Z" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" strokeWidth="1"/>
           <path d="M75 110 L100 100 L125 110 L100 125 Z" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.2)" strokeWidth="1"/>
           <path d="M80 135 L100 125 L120 135 L100 145 Z" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.15)" strokeWidth="1"/>
-          
-          {/* Battle scars */}
           <path d="M70 100 L75 105" stroke="rgba(0,0,0,0.3)" strokeWidth="1.5"/>
           <path d="M130 115 L125 120" stroke="rgba(0,0,0,0.3)" strokeWidth="1"/>
-          
-          {/* Head - more determined expression */}
           <motion.ellipse 
             cx="100" 
             cy="60" 
@@ -149,11 +166,7 @@ export default function Home() {
             }}
             transition={{ duration: 1.5, repeat: Infinity }}
           />
-          
-          {/* Tough brow ridge */}
           <path d="M85 50 Q100 45 115 50" stroke="rgba(0,0,0,0.4)" strokeWidth="2" fill="none"/>
-          
-          {/* Eyes - more intense */}
           <motion.ellipse 
             cx="90" 
             cy="58" 
@@ -176,16 +189,10 @@ export default function Home() {
             }}
             transition={{ duration: 0.1 }}
           />
-          
-          {/* Eye pupils - more focused */}
           <text x="90" y="61" textAnchor="middle" fontSize="7" fill="black" fontWeight="bold">{getEyeExpression()}</text>
           <text x="110" y="61" textAnchor="middle" fontSize="7" fill="black" fontWeight="bold">{getEyeExpression()}</text>
-          
-          {/* Determined nostril flare */}
           <ellipse cx="97" cy="65" rx="1.5" ry="2" fill="rgba(0,0,0,0.6)" />
           <ellipse cx="103" cy="65" rx="1.5" ry="2" fill="rgba(0,0,0,0.6)" />
-          
-          {/* Mouth - gritty expressions */}
           <motion.path 
             d={mood === 'determined' ? "M92 72 L108 72" : 
                 mood === 'focused' ? "M94 72 Q100 70 106 72" :
@@ -197,18 +204,12 @@ export default function Home() {
             fill="none"
             strokeLinecap="round"
           />
-          
-          {/* Muscular legs */}
           <ellipse cx="65" cy="130" rx="18" ry="12" fill="url(#muscleGradient)" />
           <ellipse cx="135" cy="130" rx="18" ry="12" fill="url(#muscleGradient)" />
           <ellipse cx="75" cy="155" rx="15" ry="10" fill="url(#muscleGradient)" />
           <ellipse cx="125" cy="155" rx="15" ry="10" fill="url(#muscleGradient)" />
-          
-          {/* Muscle definition lines */}
           <path d="M60 125 Q65 130 70 125" stroke="rgba(0,0,0,0.2)" strokeWidth="1"/>
           <path d="M130 125 Q135 130 140 125" stroke="rgba(0,0,0,0.2)" strokeWidth="1"/>
-          
-          {/* Powerful tail */}
           <motion.ellipse 
             cx="100" 
             cy="170" 
@@ -221,8 +222,6 @@ export default function Home() {
             }}
             transition={{ duration: 1.5, repeat: Infinity }}
           />
-
-          {/* Gradients */}
           <defs>
             <radialGradient id="toughShellGradient" cx="0.3" cy="0.2">
               <stop offset="0%" stopColor="#1f2937" />
@@ -242,8 +241,6 @@ export default function Home() {
             </radialGradient>
           </defs>
         </motion.svg>
-
-        {/* Mood indicator */}
         <motion.div
           className="mt-6 text-lg font-bold"
           initial={{ opacity: 0 }}
