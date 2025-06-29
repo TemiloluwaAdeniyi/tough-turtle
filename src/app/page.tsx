@@ -92,8 +92,8 @@ export default function Home() {
       >
         <motion.div
           className="absolute -top-6 -left-6 text-orange-400 text-3xl"
-          animate={{ 
-            rotate: [0, 360], 
+          animate={{
+            rotate: [0, 360],
             scale: [1, 1.3, 1],
             opacity: [0.6, 1, 0.6]
           }}
@@ -103,8 +103,8 @@ export default function Home() {
         </motion.div>
         <motion.div
           className="absolute -top-4 -right-8 text-red-400 text-2xl"
-          animate={{ 
-            rotate: [360, 0], 
+          animate={{
+            rotate: [360, 0],
             scale: [1, 1.4, 1],
             opacity: [0.5, 0.9, 0.5]
           }}
@@ -114,7 +114,7 @@ export default function Home() {
         </motion.div>
         <motion.div
           className="absolute -bottom-6 -right-4 text-yellow-400 text-2xl"
-          animate={{ 
+          animate={{
             y: [0, -10, 0],
             opacity: [0.4, 0.8, 0.4]
           }}
@@ -124,123 +124,227 @@ export default function Home() {
         </motion.div>
 
         <motion.svg
-          width="200"
-          height="200"
-          viewBox="0 0 200 200"
-          className="mx-auto filter drop-shadow-lg"
-          animate={{ 
-            y: [0, -10, 0],
-            rotate: [0, 2, -2, 0]
+          width="220"
+          height="220"
+          viewBox="0 0 220 220"
+          className="mx-auto filter drop-shadow-2xl"
+          animate={{
+            y: [0, -8, 0],
+            rotate: [0, 1, -1, 0]
           }}
-          transition={{ 
-            duration: 4, 
-            repeat: Infinity, 
-            ease: "easeInOut" 
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            ease: "easeInOut"
           }}
         >
-          <ellipse cx="100" cy="185" rx="45" ry="12" fill="rgba(0,0,0,0.3)" />
-          <motion.path
-            d="M100 70 L140 95 L135 140 L100 155 L65 140 L60 95 Z"
-            fill="url(#toughShellGradient)"
-            stroke="rgba(0,0,0,0.2)"
+          <ellipse cx="110" cy="200" rx="45" ry="12" fill="rgba(0,0,0,0.3)" />
+
+          {/* Squirtle Shell - more rounded and Squirtle-like */}
+          <motion.circle
+            cx="110"
+            cy="110"
+            r="42"
+            fill="url(#squirtleShellGradient)"
+            stroke="rgba(59, 130, 246, 0.8)"
             strokeWidth="2"
-            animate={{ 
+            animate={{
               scale: mood === 'beast_mode' ? [1, 1.05, 1] : 1
             }}
             transition={{ duration: 0.8, repeat: Infinity }}
           />
-          <path d="M85 85 L100 75 L115 85 L100 100 Z" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" strokeWidth="1"/>
-          <path d="M75 110 L100 100 L125 110 L100 125 Z" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.2)" strokeWidth="1"/>
-          <path d="M80 135 L100 125 L120 135 L100 145 Z" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.15)" strokeWidth="1"/>
-          <path d="M70 100 L75 105" stroke="rgba(0,0,0,0.3)" strokeWidth="1.5"/>
-          <path d="M130 115 L125 120" stroke="rgba(0,0,0,0.3)" strokeWidth="1"/>
-          <motion.ellipse 
-            cx="100" 
-            cy="60" 
-            rx="28" 
-            ry="22" 
-            fill="url(#toughHeadGradient)"
-            animate={{ 
-              scaleX: mood === 'focused' ? [1, 1.1, 1] : 1,
-              scaleY: mood === 'determined' ? [1, 0.95, 1] : 1
+
+          {/* Shell Pattern - Squirtle's hexagonal segments */}
+          <circle cx="110" cy="90" r="12" fill="rgba(255,255,255,0.4)" stroke="#3b82f6" strokeWidth="2" />
+          <circle cx="95" cy="110" r="10" fill="rgba(255,255,255,0.3)" stroke="#3b82f6" strokeWidth="1.5" />
+          <circle cx="125" cy="110" r="10" fill="rgba(255,255,255,0.3)" stroke="#3b82f6" strokeWidth="1.5" />
+          <circle cx="95" cy="130" r="8" fill="rgba(255,255,255,0.25)" stroke="#3b82f6" strokeWidth="1" />
+          <circle cx="125" cy="130" r="8" fill="rgba(255,255,255,0.25)" stroke="#3b82f6" strokeWidth="1" />
+          <circle cx="110" cy="135" r="6" fill="rgba(255,255,255,0.2)" stroke="#3b82f6" strokeWidth="1" />
+
+          {/* Pixar-style Head - bigger and more endearing */}
+          <motion.ellipse
+            cx="110"
+            cy="60"
+            rx="38"
+            ry="35"
+            fill="url(#squirtleHeadGradient)"
+            animate={{
+              scaleX: mood === 'focused' ? [1, 1.03, 1] : 1,
+              scaleY: mood === 'determined' ? [1, 0.98, 1] : 1
             }}
             transition={{ duration: 1.5, repeat: Infinity }}
           />
-          <path d="M85 50 Q100 45 115 50" stroke="rgba(0,0,0,0.4)" strokeWidth="2" fill="none"/>
-          <motion.ellipse 
-            cx="90" 
-            cy="58" 
-            rx="5" 
-            ry="4" 
+
+          {/* Squirtle's characteristic head curves */}
+          <path d="M85 42 Q95 38 105 42" stroke="rgba(59, 130, 246, 0.6)" strokeWidth="2" fill="none" />
+          <path d="M115 42 Q125 38 135 42" stroke="rgba(59, 130, 246, 0.6)" strokeWidth="2" fill="none" />
+
+          {/* HUGE Adorable Eyes - much bigger like the turtle image */}
+          <motion.ellipse
+            cx="95"
+            cy="55"
+            rx="18"
+            ry="16"
             fill="white"
-            animate={{ 
+            stroke="rgba(59, 130, 246, 0.3)"
+            strokeWidth="1.5"
+            animate={{
               scaleY: isBlinking ? 0.1 : 1
             }}
             transition={{ duration: 0.1 }}
           />
-          <motion.ellipse 
-            cx="110" 
-            cy="58" 
-            rx="5" 
-            ry="4" 
+          <motion.ellipse
+            cx="125"
+            cy="55"
+            rx="18"
+            ry="16"
             fill="white"
-            animate={{ 
+            stroke="rgba(59, 130, 246, 0.3)"
+            strokeWidth="1.5"
+            animate={{
               scaleY: isBlinking ? 0.1 : 1
             }}
             transition={{ duration: 0.1 }}
           />
-          <text x="90" y="61" textAnchor="middle" fontSize="7" fill="black" fontWeight="bold">{getEyeExpression()}</text>
-          <text x="110" y="61" textAnchor="middle" fontSize="7" fill="black" fontWeight="bold">{getEyeExpression()}</text>
-          <ellipse cx="97" cy="65" rx="1.5" ry="2" fill="rgba(0,0,0,0.6)" />
-          <ellipse cx="103" cy="65" rx="1.5" ry="2" fill="rgba(0,0,0,0.6)" />
-          <motion.path 
-            d={mood === 'determined' ? "M92 72 L108 72" : 
-                mood === 'focused' ? "M94 72 Q100 70 106 72" :
-                mood === 'pumped' ? "M92 70 Q100 76 108 70" :
-                mood === 'beast_mode' ? "M90 71 Q100 78 110 71" : 
-                "M94 73 Q100 71 106 73"}
-            stroke="rgba(0,0,0,0.8)" 
-            strokeWidth="2" 
+
+          {/* Large Pupils for maximum cuteness */}
+          <circle cx="95" cy="55" r="8" fill="#1e40af" />
+          <circle cx="125" cy="55" r="8" fill="#1e40af" />
+
+          {/* Smaller inner pupils */}
+          <circle cx="95" cy="55" r="5" fill="black" />
+          <circle cx="125" cy="55" r="5" fill="black" />
+
+          {/* Big eye shine/reflection for that adorable look */}
+          <ellipse cx="97" cy="51" rx="4" ry="3" fill="rgba(255,255,255,0.9)" />
+          <ellipse cx="127" cy="51" rx="4" ry="3" fill="rgba(255,255,255,0.9)" />
+          <ellipse cx="99" cy="53" rx="2" ry="1.5" fill="rgba(255,255,255,0.7)" />
+          <ellipse cx="129" cy="53" rx="2" ry="1.5" fill="rgba(255,255,255,0.7)" />
+
+          {/* Cute little nostrils - moved down slightly */}
+          <ellipse cx="106" cy="73" rx="1.5" ry="2" fill="rgba(0,0,0,0.6)" />
+          <ellipse cx="114" cy="73" rx="1.5" ry="2" fill="rgba(0,0,0,0.6)" />
+
+          {/* More expressive mouth - moved down to accommodate bigger eyes */}
+          <motion.path
+            d={mood === 'determined' ? "M100 82 L120 82" :
+              mood === 'focused' ? "M102 82 Q110 80 118 82" :
+                mood === 'pumped' ? "M100 80 Q110 86 120 80" :
+                  mood === 'beast_mode' ? "M98 81 Q110 89 122 81" :
+                    "M102 83 Q110 81 118 83"}
+            stroke="rgba(0,0,0,0.8)"
+            strokeWidth="2.5"
             fill="none"
             strokeLinecap="round"
           />
-          <ellipse cx="65" cy="130" rx="18" ry="12" fill="url(#muscleGradient)" />
-          <ellipse cx="135" cy="130" rx="18" ry="12" fill="url(#muscleGradient)" />
-          <ellipse cx="75" cy="155" rx="15" ry="10" fill="url(#muscleGradient)" />
-          <ellipse cx="125" cy="155" rx="15" ry="10" fill="url(#muscleGradient)" />
-          <path d="M60 125 Q65 130 70 125" stroke="rgba(0,0,0,0.2)" strokeWidth="1"/>
-          <path d="M130 125 Q135 130 140 125" stroke="rgba(0,0,0,0.2)" strokeWidth="1"/>
-          <motion.ellipse 
-            cx="100" 
-            cy="170" 
-            rx="8" 
-            ry="15" 
-            fill="url(#muscleGradient)"
-            animate={{ 
-              rotate: mood === 'pumped' ? [0, 15, -15, 0] : [0, 5, -5, 0],
-              scaleX: mood === 'beast_mode' ? [1, 1.3, 1] : 1
+
+          {/* MASSIVE ARMS - positioned better */}
+          <motion.ellipse
+            cx="70"
+            cy="95"
+            rx="22"
+            ry="16"
+            fill="url(#squirtleMuscleGradient)"
+            animate={{
+              scaleX: mood === 'beast_mode' ? [1, 1.25, 1] : [1, 1.08, 1],
+              scaleY: mood === 'pumped' ? [1, 1.15, 1] : 1
+            }}
+            transition={{ duration: 1.2, repeat: Infinity }}
+          />
+          <motion.ellipse
+            cx="150"
+            cy="95"
+            rx="22"
+            ry="16"
+            fill="url(#squirtleMuscleGradient)"
+            animate={{
+              scaleX: mood === 'beast_mode' ? [1, 1.25, 1] : [1, 1.08, 1],
+              scaleY: mood === 'pumped' ? [1, 1.15, 1] : 1
+            }}
+            transition={{ duration: 1.2, repeat: Infinity }}
+          />
+
+          {/* Forearms */}
+          <motion.ellipse
+            cx="68"
+            cy="118"
+            rx="18"
+            ry="13"
+            fill="url(#squirtleMuscleGradient)"
+            animate={{
+              rotate: mood === 'pumped' ? [0, 8, -8, 0] : [0, 2, -2, 0]
+            }}
+            transition={{ duration: 1.8, repeat: Infinity }}
+          />
+          <motion.ellipse
+            cx="152"
+            cy="118"
+            rx="18"
+            ry="13"
+            fill="url(#squirtleMuscleGradient)"
+            animate={{
+              rotate: mood === 'pumped' ? [0, -8, 8, 0] : [0, -2, 2, 0]
+            }}
+            transition={{ duration: 1.8, repeat: Infinity }}
+          />
+
+          {/* MASSIVE LEGS */}
+          <motion.ellipse
+            cx="88"
+            cy="155"
+            rx="20"
+            ry="22"
+            fill="url(#squirtleMuscleGradient)"
+            animate={{
+              scaleX: mood === 'beast_mode' ? [1, 1.2, 1] : 1
             }}
             transition={{ duration: 1.5, repeat: Infinity }}
           />
+          <motion.ellipse
+            cx="132"
+            cy="155"
+            rx="20"
+            ry="22"
+            fill="url(#squirtleMuscleGradient)"
+            animate={{
+              scaleX: mood === 'beast_mode' ? [1, 1.2, 1] : 1
+            }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+          />
+
+          {/* Feet */}
+          <ellipse cx="82" cy="180" rx="16" ry="10" fill="url(#squirtleMuscleGradient)" />
+          <ellipse cx="138" cy="180" rx="16" ry="10" fill="url(#squirtleMuscleGradient)" />
+
+          {/* Muscle definition lines */}
+          <path d="M65 90 Q70 95 75 90" stroke="rgba(59, 130, 246, 0.4)" strokeWidth="1.5" />
+          <path d="M145 90 Q150 95 155 90" stroke="rgba(59, 130, 246, 0.4)" strokeWidth="1.5" />
+          <path d="M83 150 Q88 155 93 150" stroke="rgba(59, 130, 246, 0.4)" strokeWidth="1.5" />
+          <path d="M127 150 Q132 155 137 150" stroke="rgba(59, 130, 246, 0.4)" strokeWidth="1.5" />
+
           <defs>
-            <radialGradient id="toughShellGradient" cx="0.3" cy="0.2">
-              <stop offset="0%" stopColor="#1f2937" />
-              <stop offset="30%" stopColor="#374151" />
+            <radialGradient id="squirtleShellGradient" cx="0.3" cy="0.2">
+              <stop offset="0%" stopColor="#a7f3d0" />
+              <stop offset="30%" stopColor="#6ee7b7" />
               <stop offset="60%" stopColor="#10b981" />
               <stop offset="100%" stopColor="#047857" />
             </radialGradient>
-            <radialGradient id="toughHeadGradient" cx="0.3" cy="0.3">
-              <stop offset="0%" stopColor="#6b7280" />
-              <stop offset="50%" stopColor="#10b981" />
-              <stop offset="100%" stopColor="#065f46" />
+            <radialGradient id="squirtleHeadGradient" cx="0.3" cy="0.3">
+              <stop offset="0%" stopColor="#dbeafe" />
+              <stop offset="40%" stopColor="#93c5fd" />
+              <stop offset="70%" stopColor="#3b82f6" />
+              <stop offset="100%" stopColor="#1d4ed8" />
             </radialGradient>
-            <radialGradient id="muscleGradient" cx="0.3" cy="0.3">
-              <stop offset="0%" stopColor="#34d399" />
-              <stop offset="70%" stopColor="#10b981" />
-              <stop offset="100%" stopColor="#047857" />
+            <radialGradient id="squirtleMuscleGradient" cx="0.3" cy="0.3">
+              <stop offset="0%" stopColor="#93c5fd" />
+              <stop offset="50%" stopColor="#3b82f6" />
+              <stop offset="80%" stopColor="#1e40af" />
+              <stop offset="100%" stopColor="#1e3a8a" />
             </radialGradient>
           </defs>
         </motion.svg>
+
         <motion.div
           className="mt-6 text-lg font-bold"
           initial={{ opacity: 0 }}
@@ -257,8 +361,8 @@ export default function Home() {
         </motion.div>
       </motion.div>
 
-      <motion.button 
-        onClick={handleLogin} 
+      <motion.button
+        onClick={handleLogin}
         className="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white font-black py-5 px-10 rounded-full text-xl shadow-2xl transform transition-all duration-200 hover:scale-105 hover:shadow-orange-500/25 border-2 border-orange-400/50"
         initial={{ y: 50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -275,7 +379,7 @@ export default function Home() {
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2 }}
       >
-        Train your digital warrior companion while building real-world resilience. 
+        Train your digital warrior companion while building real-world resilience.
         <span className="text-emerald-400 font-semibold"> Challenge yourself. Track progress. Stay unstoppable.</span>
       </motion.p>
     </div>
