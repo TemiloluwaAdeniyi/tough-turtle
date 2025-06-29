@@ -3,14 +3,34 @@
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
+type AuthChangeEvent = Parameters<Parameters<typeof supabase.auth.onAuthStateChange>[0]>[0];
+
+interface User {
+  id: string;
+  xp: number;
+  stage: string;
+  skin: string;
+  username: string;
+  skin_expiry: string | null;
+}
+
+interface Challenge {
+  progress: number;
+  completed: boolean;
+}
+
+interface LeaderboardEntry {
+  username: string;
+  xp: number;
+}
 
 export default function Dashboard() {
-  const [user, setUser] = useState({ xp: 0, stage: 'Tiny Hatchling', skin: 'default', username: '', skin_expiry: null });
-  const [challenge, setChallenge] = useState({ progress: 0, completed: false });
+  const [user, setUser] = useState<User>({ id: '', xp: 0, stage: 'Tiny Hatchling', skin: 'default', username: '', skin_expiry: null });
+  const [challenge, setChallenge] = useState<Challenge>({ progress: 0, completed: false });
   const [sleepHours, setSleepHours] = useState('');
   const [mood, setMood] = useState('determined');
   const [distance, setDistance] = useState('');
-  const [leaderboard, setLeaderboard] = useState([]);
+  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [timeLeft, setTimeLeft] = useState(7 * 24 * 60 * 60);
 
   useEffect(() => {
@@ -20,13 +40,17 @@ export default function Dashboard() {
         window.location.href = '/';
         return;
       }
-      const { data: userData } = await supabase
+      const { data: userData, error: userError } = await supabase
         .from('users')
-        .select('xp, stage, skin, username, skin_expiry')
+        .select('id, xp, stage, skin, username, skin_expiry')
         .eq('id', authUser.id)
         .single();
+      if (userError) {
+        console.error('Error fetching user:', userError);
+        return;
+      }
       if (userData) {
-        setUser(userData);
+        setUser(userData as User);
         if (userData.skin_expiry) {
           const expiry = new Date(userData.skin_expiry).getTime();
           const now = new Date().getTime();
@@ -34,40 +58,47 @@ export default function Dashboard() {
         }
       }
 
-      const { data: challengeData } = await supabase
+      const { data: challengeData, error: challengeError } = await supabase
         .from('challenges')
         .select('progress, completed')
         .eq('user_id', authUser.id)
         .eq('name', 'Sprint to Spry Snapper')
         .single();
+      if (challengeError && challengeError.code !== 'PGRST116') {
+        console.error('Error fetching challenge:', challengeError);
+        return;
+      }
       if (challengeData) {
-        setChallenge(challengeData);
+        setChallenge(challengeData as Challenge);
       } else {
         await supabase
           .from('challenges')
           .insert({ user_id: authUser.id, name: 'Sprint to Spry Snapper', goal: 5 });
       }
 
-      const { data: leaderboardData } = await supabase
+      const { data: leaderboardData, error: leaderboardError } = await supabase
         .from('users')
         .select('username, xp')
         .order('xp', { ascending: false })
         .limit(5);
-      setLeaderboard(leaderboardData || []);
+      if (leaderboardError) {
+        console.error('Error fetching leaderboard:', leaderboardError);
+        return;
+      }
+      setLeaderboard(leaderboardData as LeaderboardEntry[]);
 
-      // Subscribe to auth state changes
-      const { subscription } = supabase.auth.onAuthStateChange((event, session) => {
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((event: AuthChangeEvent) => {
         if (event === 'SIGNED_OUT') {
           window.location.href = '/';
         }
       });
-      return () => subscription.unsubscribe();
+      return () => subscription?.unsubscribe();
     };
     init();
 
     const timer = setInterval(() => {
       setTimeLeft(t => {
-        if (t <= 0) {
+        if (t <= 0 && user.skin === 'glow') {
           supabase
             .from('users')
             .update({ skin: 'default', skin_expiry: null })
@@ -96,7 +127,7 @@ export default function Dashboard() {
         body: JSON.stringify({ distance: parseFloat(distance), userId: authUser.id }),
       });
       if (!res.ok) throw new Error('Failed to log activity');
-      const updatedUser = await res.json();
+      const updatedUser = await res.json() as { xp: number; stage: string };
       setUser({ ...user, xp: updatedUser.xp, stage: updatedUser.stage });
       const { data: challengeData } = await supabase
         .from('challenges')
@@ -104,7 +135,7 @@ export default function Dashboard() {
         .eq('user_id', authUser.id)
         .eq('name', 'Sprint to Spry Snapper')
         .single();
-      setChallenge(challengeData);
+      setChallenge(challengeData as Challenge || { progress: 0, completed: false });
       setDistance('');
     } catch (error) {
       console.error('Error logging distance:', error);
@@ -122,8 +153,8 @@ export default function Dashboard() {
         body: JSON.stringify({ sleep_hours: parseFloat(sleepHours), mood, userId: authUser.id }),
       });
       if (!res.ok) throw new Error('Failed to log wellness');
-      const updatedUser = await res.json();
-      if (updatedUser.xp) {
+      const updatedUser = await res.json() as { xp?: number; stage?: string; success?: boolean };
+      if (updatedUser.xp && updatedUser.stage) {
         setUser({ ...user, xp: updatedUser.xp, stage: updatedUser.stage });
       }
       setSleepHours('');
@@ -141,7 +172,7 @@ export default function Dashboard() {
       const res = await fetch('/api/feed', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: `I’m a ${user.stage}! #ToughTurtle`, userId: authUser.id }),
+        body: JSON.stringify({ message: `I'm a ${user.stage}! #ToughTurtle`, userId: authUser.id }),
       });
       if (!res.ok) throw new Error('Failed to share');
       alert('Shared to feed!');
