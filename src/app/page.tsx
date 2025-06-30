@@ -2,11 +2,12 @@
 
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const [isBlinking, setIsBlinking] = useState(false);
   const [mood, setMood] = useState('determined');
+  const router = useRouter();
 
   useEffect(() => {
     const blinkInterval = setInterval(() => {
@@ -25,49 +26,8 @@ export default function Home() {
     };
   }, []);
 
-  const handleLogin = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: `${window.location.origin}/dashboard` },
-    });
-    if (error) {
-      console.error('Login error:', error);
-      alert('Login failed. Try again.');
-      return;
-    }
-    // On successful login, Supabase redirects to /dashboard
-  };
-
-  useEffect(() => {
-    // Initialize user in database on first login
-    const initUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        const { data } = await supabase
-          .from('users')
-          .select('id')
-          .eq('id', user.id)
-          .single();
-        if (!data) {
-          await supabase
-            .from('users')
-            .insert({ id: user.id, username: user.email || 'User' });
-        }
-      }
-    };
-    initUser();
-  }, []);
-
-  const getEyeExpression = () => {
-    if (isBlinking) return 'M';
-    switch (mood) {
-      case 'determined': return '●';
-      case 'focused': return '◆';
-      case 'pumped': return '★';
-      case 'resilient': return '▲';
-      case 'beast_mode': return '◉';
-      default: return '●';
-    }
+  const handleButtonClick = () => {
+    router.push('/dashboard');
   };
 
   return (
@@ -362,7 +322,7 @@ export default function Home() {
       </motion.div>
 
       <motion.button
-        onClick={handleLogin}
+        onClick={handleButtonClick}
         className="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white font-black py-5 px-10 rounded-full text-xl shadow-2xl transform transition-all duration-200 hover:scale-105 hover:shadow-orange-500/25 border-2 border-orange-400/50"
         initial={{ y: 50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
