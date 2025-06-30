@@ -25,7 +25,6 @@ export default function Home() {
   }, []);
 
   const handleButtonClick = () => {
-    // Navigate to dashboard - replace with your routing logic
     window.location.href = '/dashboard';
   };
 
@@ -46,7 +45,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-800 to-emerald-900 text-white">
-      {/* Hero Section */}
       <div className="p-4 text-center flex flex-col items-center justify-center min-h-screen">
         <motion.div
           initial={{ y: -50, opacity: 0 }}
@@ -115,7 +113,6 @@ export default function Home() {
             }}
           >
             <ellipse cx="110" cy="200" rx="45" ry="12" fill="rgba(0,0,0,0.3)" />
-
             <motion.circle
               cx="110"
               cy="110"
@@ -128,14 +125,12 @@ export default function Home() {
               }}
               transition={{ duration: 0.8, repeat: Infinity }}
             />
-
             <circle cx="110" cy="90" r="12" fill="rgba(255,255,255,0.4)" stroke="#3b82f6" strokeWidth="2" />
             <circle cx="95" cy="110" r="10" fill="rgba(255,255,255,0.3)" stroke="#3b82f6" strokeWidth="1.5" />
             <circle cx="125" cy="110" r="10" fill="rgba(255,255,255,0.3)" stroke="#3b82f6" strokeWidth="1.5" />
             <circle cx="95" cy="130" r="8" fill="rgba(255,255,255,0.25)" stroke="#3b82f6" strokeWidth="1" />
             <circle cx="125" cy="130" r="8" fill="rgba(255,255,255,0.25)" stroke="#3b82f6" strokeWidth="1" />
             <circle cx="110" cy="135" r="6" fill="rgba(255,255,255,0.2)" stroke="#3b82f6" strokeWidth="1" />
-
             <motion.ellipse
               cx="110"
               cy="60"
@@ -148,10 +143,8 @@ export default function Home() {
               }}
               transition={{ duration: 1.5, repeat: Infinity }}
             />
-
             <path d="M85 42 Q95 38 105 42" stroke="rgba(59, 130, 246, 0.6)" strokeWidth="2" fill="none" />
             <path d="M115 42 Q125 38 135 42" stroke="rgba(59, 130, 246, 0.6)" strokeWidth="2" fill="none" />
-
             <motion.ellipse
               cx="95"
               cy="55"
@@ -178,20 +171,16 @@ export default function Home() {
               }}
               transition={{ duration: 0.1 }}
             />
-
             <circle cx="95" cy="55" r="8" fill="#1e40af" />
             <circle cx="125" cy="55" r="8" fill="#1e40af" />
             <circle cx="95" cy="55" r="5" fill="black" />
             <circle cx="125" cy="55" r="5" fill="black" />
-
             <ellipse cx="97" cy="51" rx="4" ry="3" fill="rgba(255,255,255,0.9)" />
             <ellipse cx="127" cy="51" rx="4" ry="3" fill="rgba(255,255,255,0.9)" />
             <ellipse cx="99" cy="53" rx="2" ry="1.5" fill="rgba(255,255,255,0.7)" />
             <ellipse cx="129" cy="53" rx="2" ry="1.5" fill="rgba(255,255,255,0.7)" />
-
             <ellipse cx="106" cy="73" rx="1.5" ry="2" fill="rgba(0,0,0,0.6)" />
             <ellipse cx="114" cy="73" rx="1.5" ry="2" fill="rgba(0,0,0,0.6)" />
-
             <motion.path
               d={mood === 'determined' ? "M100 82 L120 82" :
                 mood === 'focused' ? "M102 82 Q110 80 118 82" :
@@ -203,7 +192,6 @@ export default function Home() {
               fill="none"
               strokeLinecap="round"
             />
-
             <motion.ellipse
               cx="70"
               cy="95"
@@ -228,7 +216,6 @@ export default function Home() {
               }}
               transition={{ duration: 1.2, repeat: Infinity }}
             />
-
             <motion.ellipse
               cx="68"
               cy="118"
@@ -251,7 +238,6 @@ export default function Home() {
               }}
               transition={{ duration: 1.8, repeat: Infinity }}
             />
-
             <motion.ellipse
               cx="88"
               cy="155"
@@ -274,15 +260,12 @@ export default function Home() {
               }}
               transition={{ duration: 1.5, repeat: Infinity }}
             />
-
             <ellipse cx="82" cy="180" rx="16" ry="10" fill="url(#squirtleMuscleGradient)" />
             <ellipse cx="138" cy="180" rx="16" ry="10" fill="url(#squirtleMuscleGradient)" />
-
             <path d="M65 90 Q70 95 75 90" stroke="rgba(59, 130, 246, 0.4)" strokeWidth="1.5" />
             <path d="M145 90 Q150 95 155 90" stroke="rgba(59, 130, 246, 0.4)" strokeWidth="1.5" />
             <path d="M83 150 Q88 155 93 150" stroke="rgba(59, 130, 246, 0.4)" strokeWidth="1.5" />
             <path d="M127 150 Q132 155 137 150" stroke="rgba(59, 130, 246, 0.4)" strokeWidth="1.5" />
-
             <defs>
               <radialGradient id="squirtleShellGradient" cx="0.3" cy="0.2">
                 <stop offset="0%" stopColor="#a7f3d0" />
@@ -334,7 +317,6 @@ export default function Home() {
         </motion.button>
       </div>
 
-      {/* Mission Statement */}
       <motion.section 
         className="px-4 py-16 max-w-4xl mx-auto text-center"
         initial={{ opacity: 0, y: 50 }}
@@ -347,18 +329,17 @@ export default function Home() {
             💥 FORGE A MINDSET. BUILD A BODY. LEVEL UP YOUR SHELL.
           </h2>
           <p className="text-lg text-gray-200 leading-relaxed mb-6">
-            This isn't just another fitness app. It's your arena for growth, challenge, and evolution. Every habit strengthens your digital warrior—and your real-world self.
+            This isn&apos;t just another fitness app. It&apos;s your arena for growth, challenge, and evolution. Every habit strengthens your digital warrior—and your real-world self.
           </p>
           <div className="bg-black/30 backdrop-blur-sm rounded-2xl p-6 border-l-4 border-orange-500">
             <p className="text-gray-300 italic text-lg leading-relaxed">
-              "You are in danger of living a life so comfortable and soft, that you will die without ever realizing your true potential."
+              &quot;You are in danger of living a life so comfortable and soft, that you will die without ever realizing your true potential.&quot;
             </p>
             <p className="text-orange-400 font-bold mt-2">— David Goggins</p>
           </div>
         </div>
       </motion.section>
 
-      {/* Features Grid */}
       <motion.section 
         className="px-4 py-16 max-w-6xl mx-auto"
         initial={{ opacity: 0 }}
@@ -390,7 +371,6 @@ export default function Home() {
         </div>
       </motion.section>
 
-      {/* Dopamine Philosophy */}
       <motion.section 
         className="px-4 py-16 max-w-4xl mx-auto"
         initial={{ opacity: 0, y: 50 }}
@@ -403,7 +383,7 @@ export default function Home() {
             🧠 DOING DOPAMINE DIFFERENTLY
           </h2>
           <p className="text-lg text-gray-200 text-center mb-8 leading-relaxed">
-            Not addicted. <span className="text-emerald-400 font-bold">Activated</span>. We've replaced infinite scrolls and mindless likes with mission-based dopamine that rewards movement, resilience, and real progress.
+            Not addicted. <span className="text-emerald-400 font-bold">Activated</span>. We&apos;ve replaced infinite scrolls and mindless likes with mission-based dopamine that rewards movement, resilience, and real progress.
           </p>
           <div className="grid md:grid-cols-2 gap-4">
             {principles.map((principle, index) => (
@@ -423,7 +403,6 @@ export default function Home() {
         </div>
       </motion.section>
 
-      {/* Social Component */}
       <motion.section 
         className="px-4 py-16 max-w-4xl mx-auto"
         initial={{ opacity: 0, y: 50 }}
@@ -436,18 +415,17 @@ export default function Home() {
             ⚔️ OUTLAST. OUTLIFT. OUTLEVEL.
           </h2>
           <p className="text-lg text-gray-200 mb-6 leading-relaxed">
-            It's not social media. It's <span className="text-red-400 font-bold">social stamina</span>. Cheer on rivals. Hype your squad. Unlock badge-worthy habits. Fuel real connection through competition, grit, and growth—not likes.
+            It&apos;s not social media. It&apos;s <span className="text-red-400 font-bold">social stamina</span>. Cheer on rivals. Hype your squad. Unlock badge-worthy habits. Fuel real connection through competition, grit, and growth—not likes.
           </p>
           <div className="bg-black/30 backdrop-blur-sm rounded-2xl p-6 inline-block">
             <p className="text-xl font-bold text-orange-400">
-              Tough Turtle isn't about vanity metrics.<br />
-              It's about becoming <span className="text-red-400">unbreakable</span>, one rep at a time.
+              Tough Turtle isn&apos;t about vanity metrics.<br />
+              It&apos;s about becoming <span className="text-red-400">unbreakable</span>, one rep at a time.
             </p>
           </div>
         </div>
       </motion.section>
 
-      {/* Final CTA */}
       <motion.section 
         className="px-4 py-20 text-center"
         initial={{ opacity: 0, scale: 0.9 }}
