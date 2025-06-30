@@ -57,7 +57,7 @@ export default function Home() {
           <h1 className="text-6xl font-black bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent mb-2 tracking-tight">
             🐢 TOUGH TURTLE
           </h1>
-          <p className="text-xl text-gray-300 font-semibold tracking-wide">Train Your Turtle. Transform Yourself.</p>
+          <p className="text-xl text-gray-300 font-semibold tracking-wide">Train Your Turtle. Transform Your Life.</p>
         </motion.div>
 
         <motion.div
