@@ -598,7 +598,7 @@ export default function Dashboard() {
                     strokeWidth="1.5"
                     initial={{ opacity: 0, scaleY: 1 }}
                     animate={{ opacity: 1, scaleY: isBlinking ? 0.1 : 1 }}
-                    transition={{ duration: 0.1, ease: "ease-in-out" }}
+                    transition={{ duration: 0.1, ease: "easeInOut" }}
                   />
                   <motion.ellipse
                     cx="215"
@@ -610,7 +610,7 @@ export default function Dashboard() {
                     strokeWidth="1.5"
                     initial={{ opacity: 0, scaleY: 1 }}
                     animate={{ opacity: 1, scaleY: isBlinking ? 0.1 : 1 }}
-                    transition={{ duration: 0.1, ease: "ease-in-out" }}
+                    transition={{ duration: 0.1, ease: "easeInOut" }}
                   />
                   <circle cx="185" cy="145" r="8" fill="#1e40af" />
                   <circle cx="215" cy="145" r="8" fill="#1e40af" />
