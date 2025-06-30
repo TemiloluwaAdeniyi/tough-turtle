@@ -30,16 +30,6 @@ interface LeaderboardEntry {
   streak: number;
 }
 
-interface Battle {
-  id: string;
-  opponent: string;
-  location: string;
-  type: string;
-  date: string;
-  result: string;
-  metrics: any;
-}
-
 interface BiometricData {
   heartRate: number;
   sleepScore: number;
@@ -66,7 +56,7 @@ export default function Dashboard() {
     { id: '5', type: 'meditation', title: 'Mindfulness Flow', target: 20, current: 15, unit: 'min', completed: false, streak: 7, icon: '🧘' },
   ]);
 
-  const [biometrics, setBiometrics] = useState<BiometricData>({
+  const [biometrics] = useState<BiometricData>({
     heartRate: 62,
     sleepScore: 87,
     recoveryScore: 94,
@@ -74,7 +64,7 @@ export default function Dashboard() {
     caloriesBurned: 2840,
   });
 
-  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([
+  const [leaderboard] = useState<LeaderboardEntry[]>([
     { username: 'CyberAthlete', xp: 450, streak: 12 },
     { username: 'BiohackMaster', xp: 285, streak: 8 },
     { username: 'QuantifiedSelf', xp: 220, streak: 6 },
@@ -83,7 +73,7 @@ export default function Dashboard() {
   ]);
 
   const [activeTab, setActiveTab] = useState<'overview' | 'challenges' | 'battles' | 'biometrics'>('overview');
-  const [challengeInput, setChallengeInput] = useState<{[key: string]: string}>({});
+  const [challengeInput, setChallengeInput] = useState<{ [key: string]: string }>({});
   const [isBlinking, setIsBlinking] = useState(false);
   const [mood, setMood] = useState<'determined' | 'focused' | 'pumped' | 'resilient' | 'beast_mode'>('determined');
   const [isHatching, setIsHatching] = useState(false);
@@ -116,7 +106,7 @@ export default function Dashboard() {
       clearInterval(moodInterval);
       clearInterval(xpInterval);
     };
-  }, [user.xp]);
+  }, [user.xp, user.stage]);
 
   useEffect(() => {
     if (user.xp >= 150 && user.xp < 300) {
@@ -156,10 +146,10 @@ export default function Dashboard() {
   };
 
   const getTurtleStage = (xp: number) => {
-    if (xp >= 500) return 'Tough Turtle Titan'; // Ultimate turtle, peak fitness & biohacking
-    if (xp >= 300) return 'Shadow Shell'; // Mature turtle, advanced fitness & biohacking
-    if (xp >= 150) return 'Shelless Seeker'; // Young turtle, developing fitness & biohacking
-    if (xp >= 50) return 'Spry Snapper'; // Growing turtle, early fitness & biohacking
+    if (xp >= 500) return 'Tough Turtle Titan';
+    if (xp >= 300) return 'Shadow Shell';
+    if (xp >= 150) return 'Shelless Seeker';
+    if (xp >= 50) return 'Spry Snapper';
     return 'Batchling Hatchling';
   };
 
@@ -260,7 +250,6 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 relative overflow-hidden">
-      {/* Animated background elements */}
       <div className="absolute inset-0 pointer-events-none">
         {[...Array(20)].map((_, i) => (
           <div
@@ -277,7 +266,6 @@ export default function Dashboard() {
       </div>
 
       <div className="relative z-10 p-6">
-        {/* Header */}
         <motion.div
           className="text-center mb-8"
           initial={{ opacity: 0, y: -20 }}
@@ -302,7 +290,6 @@ export default function Dashboard() {
           </div>
         </motion.div>
 
-        {/* Biohacker Avatar - Cinematic Egg */}
         <motion.div
           className="flex justify-center mb-8"
           initial={{ opacity: 0, scale: 0.8 }}
@@ -312,7 +299,6 @@ export default function Dashboard() {
           <div className="relative">
             <svg width="400" height="400" viewBox="0 0 400 400" className="drop-shadow-2xl">
               <defs>
-                {/* Advanced gradient definitions */}
                 <radialGradient id="eggGradient" cx="0.3" cy="0.2" r="0.8">
                   <stop offset="0%" stopColor="#fff8e1" stopOpacity="1" />
                   <stop offset="20%" stopColor="#fff3c4" stopOpacity="1" />
@@ -320,24 +306,20 @@ export default function Dashboard() {
                   <stop offset="80%" stopColor="#fdcb6e" stopOpacity="1" />
                   <stop offset="100%" stopColor="#e17055" stopOpacity="1" />
                 </radialGradient>
-
                 <linearGradient id="shadowGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                   <stop offset="0%" stopColor="#2d3436" stopOpacity="0.8" />
                   <stop offset="100%" stopColor="#636e72" stopOpacity="0.2" />
                 </linearGradient>
-
                 <radialGradient id="rimLight" cx="0.8" cy="0.2" r="0.6">
                   <stop offset="0%" stopColor="#ffffff" stopOpacity="0.9" />
                   <stop offset="30%" stopColor="#ffffff" stopOpacity="0.6" />
                   <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
                 </radialGradient>
-
                 <radialGradient id="specularHighlight" cx="0.25" cy="0.25" r="0.3">
                   <stop offset="0%" stopColor="#ffffff" stopOpacity="0.8" />
                   <stop offset="50%" stopColor="#ffffff" stopOpacity="0.3" />
                   <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
                 </radialGradient>
-
                 <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
                   <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
                   <feMerge> 
@@ -345,7 +327,6 @@ export default function Dashboard() {
                     <feMergeNode in="SourceGraphic"/>
                   </feMerge>
                 </filter>
-
                 <filter id="crackGlow" x="-50%" y="-50%" width="200%" height="200%">
                   <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
                   <feMerge> 
@@ -353,7 +334,6 @@ export default function Dashboard() {
                     <feMergeNode in="SourceGraphic"/>
                   </feMerge>
                 </filter>
-
                 <pattern id="eggTexture" patternUnits="userSpaceOnUse" width="20" height="20">
                   <circle cx="3" cy="3" r="0.8" fill="#ffffff" opacity="0.12"/>
                   <circle cx="15" cy="8" r="0.4" fill="#ffffff" opacity="0.18"/>
@@ -362,7 +342,6 @@ export default function Dashboard() {
                   <circle cx="18" cy="18" r="0.6" fill="#ffffff" opacity="0.1"/>
                   <circle cx="5" cy="12" r="0.5" fill="#ffffff" opacity="0.2"/>
                 </pattern>
-
                 <pattern id="shellGrain" patternUnits="userSpaceOnUse" width="8" height="8">
                   <rect width="8" height="8" fill="none"/>
                   <circle cx="2" cy="2" r="0.3" fill="#f8c471" opacity="0.3"/>
@@ -371,19 +350,16 @@ export default function Dashboard() {
                   <circle cx="1" cy="7" r="0.15" fill="#f7dc6f" opacity="0.35"/>
                   <circle cx="7" cy="1" r="0.25" fill="#f8c471" opacity="0.3"/>
                 </pattern>
-
                 <pattern id="microTexture" patternUnits="userSpaceOnUse" width="4" height="4">
                   <rect width="4" height="4" fill="none"/>
                   <circle cx="1" cy="1" r="0.15" fill="#ffffff" opacity="0.25"/>
                   <circle cx="3" cy="2" r="0.1" fill="#ffffff" opacity="0.3"/>
                   <circle cx="2" cy="3" r="0.2" fill="#ffffff" opacity="0.2"/>
                 </pattern>
-
                 <filter id="bumpMap" x="-50%" y="-50%" width="200%" height="200%">
                   <feTurbulence baseFrequency="0.9" numOctaves="4" result="noise"/>
                   <feDisplacementMap in="SourceGraphic" in2="noise" scale="2"/>
                 </filter>
-
                 <filter id="surfaceDetail" x="-50%" y="-50%" width="200%" height="200%">
                   <feTurbulence baseFrequency="2.5" numOctaves="3" result="fineTurbulence"/>
                   <feColorMatrix in="fineTurbulence" type="saturate" values="0"/>
@@ -391,7 +367,6 @@ export default function Dashboard() {
                 </filter>
               </defs>
 
-              {/* Ground shadow */}
               <ellipse 
                 cx="200" 
                 cy="350" 
@@ -405,12 +380,10 @@ export default function Dashboard() {
                 }}
               />
 
-              {/* Main egg body */}
               <g style={{ 
                 transform: `translate(200px, 200px) scale(${eggScale}) translate(-200px, -200px)`,
                 filter: 'url(#softGlow)'
               }}>
-                {/* Base egg shape with surface detail */}
                 <ellipse
                   cx="200"
                   cy="200"
@@ -423,8 +396,6 @@ export default function Dashboard() {
                     transformOrigin: 'center'
                   }}
                 />
-
-                {/* Fine grain texture layer */}
                 <ellipse
                   cx="200"
                   cy="200"
@@ -434,8 +405,6 @@ export default function Dashboard() {
                   opacity="0.6"
                   filter="url(#surfaceDetail)"
                 />
-
-                {/* Micro-texture overlay */}
                 <ellipse
                   cx="200"
                   cy="200"
@@ -444,8 +413,6 @@ export default function Dashboard() {
                   fill="url(#microTexture)"
                   opacity="0.4"
                 />
-
-                {/* Porous texture spots */}
                 <ellipse
                   cx="200"
                   cy="200"
@@ -454,8 +421,6 @@ export default function Dashboard() {
                   fill="url(#eggTexture)"
                   opacity="0.5"
                 />
-
-                {/* Natural surface variations */}
                 <g opacity="0.3">
                   <ellipse cx="175" cy="180" rx="8" ry="12" fill="#e8b86d" opacity="0.4"/>
                   <ellipse cx="220" cy="200" rx="6" ry="9" fill="#f0c674" opacity="0.3"/>
@@ -463,8 +428,6 @@ export default function Dashboard() {
                   <ellipse cx="210" cy="160" rx="4" ry="6" fill="#f2d78b" opacity="0.4"/>
                   <ellipse cx="185" cy="220" rx="7" ry="10" fill="#ecc94b" opacity="0.3"/>
                 </g>
-
-                {/* Rim lighting */}
                 <ellipse
                   cx="200"
                   cy="200"
@@ -473,8 +436,6 @@ export default function Dashboard() {
                   fill="url(#rimLight)"
                   opacity={rimLightOpacity}
                 />
-
-                {/* Main specular highlight */}
                 <ellipse
                   cx="180"
                   cy="160"
@@ -483,8 +444,6 @@ export default function Dashboard() {
                   fill="url(#specularHighlight)"
                   opacity={lightIntensity}
                 />
-
-                {/* Secondary smaller highlight */}
                 <ellipse
                   cx="170"
                   cy="150"
@@ -493,8 +452,6 @@ export default function Dashboard() {
                   fill="#ffffff"
                   opacity={0.6 * lightIntensity}
                 />
-
-                {/* Tertiary micro-highlights */}
                 <ellipse
                   cx="165"
                   cy="145"
@@ -503,7 +460,6 @@ export default function Dashboard() {
                   fill="#ffffff"
                   opacity={0.8 * lightIntensity}
                 />
-                
                 <ellipse
                   cx="185"
                   cy="170"
@@ -514,10 +470,8 @@ export default function Dashboard() {
                 />
               </g>
 
-              {/* Enhanced Crack system */}
               {crackLevel > 0 && (
                 <g filter="url(#crackGlow)">
-                  {/* Main vertical crack */}
                   <path
                     d="M160 170 Q170 160 180 170 Q190 180 200 170 Q210 160 220 170"
                     stroke="#ff6b6b"
@@ -529,8 +483,6 @@ export default function Dashboard() {
                       animation: 'crackPulse 1s ease-in-out infinite alternate'
                     }}
                   />
-                  
-                  {/* Additional horizontal crack */}
                   {crackLevel > 1 && (
                     <path
                       d="M170 200 Q180 190 190 200 Q200 210 210 200"
@@ -544,8 +496,6 @@ export default function Dashboard() {
                       }}
                     />
                   )}
-
-                  {/* Diagonal crack on left */}
                   {crackLevel > 2 && (
                     <path
                       d="M150 190 Q160 180 170 190"
@@ -559,8 +509,6 @@ export default function Dashboard() {
                       }}
                     />
                   )}
-
-                  {/* Diagonal crack on right */}
                   {crackLevel > 2 && (
                     <path
                       d="M230 190 Q220 180 210 190"
@@ -574,8 +522,6 @@ export default function Dashboard() {
                       }}
                     />
                   )}
-
-                  {/* Top crack */}
                   {crackLevel > 3 && (
                     <path
                       d="M180 150 Q190 140 200 150 Q210 140 220 150"
@@ -589,8 +535,6 @@ export default function Dashboard() {
                       }}
                     />
                   )}
-
-                  {/* Bottom crack */}
                   {crackLevel > 3 && (
                     <path
                       d="M180 250 Q190 260 200 250 Q210 260 220 250"
@@ -604,7 +548,6 @@ export default function Dashboard() {
                       }}
                     />
                   )}
-
                   {crackLevel > 4 && (
                     <>
                       <path
@@ -624,7 +567,6 @@ export default function Dashboard() {
                 </g>
               )}
 
-              {/* Magical energy effects */}
               {isHatching && (
                 <g>
                   {[...Array(12)].map((_, i) => (
@@ -644,7 +586,6 @@ export default function Dashboard() {
                 </g>
               )}
 
-              {/* Eyes peeking through when cracking */}
               {crackLevel >= 3 && (
                 <g>
                   <motion.ellipse
@@ -707,7 +648,6 @@ export default function Dashboard() {
           </div>
         </motion.div>
 
-        {/* Navigation Tabs */}
         <div className="flex justify-center mb-8">
           <div className="bg-black/30 backdrop-blur-xl rounded-2xl p-2 border border-white/10">
             {(['overview', 'challenges', 'battles', 'biometrics'] as const).map((tab) => (
@@ -728,7 +668,6 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Content based on active tab */}
         <div className="max-w-7xl mx-auto">
           {activeTab === 'overview' && (
             <motion.div
