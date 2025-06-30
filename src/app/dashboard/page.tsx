@@ -107,7 +107,7 @@ export default function Dashboard() {
     }, 4000);
 
     const xpInterval = setInterval(() => {
-      setUser(prev => ({ ...prev, xp: Math.min(prev.xp + 2, 400) }));
+      setUser(prev => ({ ...prev, xp: Math.min(prev.xp + 2, 600) }));
       setLightIntensity(0.8 + Math.sin(Date.now() * 0.003) * 0.2);
     }, 100);
 
@@ -156,11 +156,11 @@ export default function Dashboard() {
   };
 
   const getTurtleStage = (xp: number) => {
-    if (xp >= 500) return 'Quantum Overlord';
-    if (xp >= 300) return 'Neural Enhanced';
-    if (xp >= 150) return 'Hatchling';
-    if (xp >= 50) return 'Data Driven';
-    return 'Baseline Human';
+    if (xp >= 500) return 'Tough Turtle Titan'; // Ultimate turtle, peak fitness & biohacking
+    if (xp >= 300) return 'Shadow Shell'; // Mature turtle, advanced fitness & biohacking
+    if (xp >= 150) return 'Shelless Seeker'; // Young turtle, developing fitness & biohacking
+    if (xp >= 50) return 'Spry Snapper'; // Growing turtle, early fitness & biohacking
+    return 'Batchling Hatchling';
   };
 
   const renderBiometricCard = (title: string, value: number | string, unit: string, icon: string, color: string) => (
@@ -254,7 +254,7 @@ export default function Dashboard() {
     );
   };
 
-  const eggScale = 1 + (isHatching ? Math.sin(Date.now() * 0.008) * 0.15 : 0); // Increased amplitude and frequency
+  const eggScale = 1 + (isHatching ? Math.sin(Date.now() * 0.008) * 0.15 : 0);
   const shadowOpacity = 0.3 + Math.sin(Date.now() * 0.002) * 0.1;
   const rimLightOpacity = 0.6 + Math.sin(Date.now() * 0.004) * 0.4;
 
@@ -290,11 +290,11 @@ export default function Dashboard() {
           <div className="flex justify-center items-center gap-4 text-gray-300 text-lg">
             <span>Level: {user.stage}</span>
             <div className="flex items-center gap-2">
-              <span>XP: {user.xp}/400</span>
+              <span>XP: {user.xp}/600</span>
               <div className="w-24 h-2 bg-gray-700 rounded-full">
                 <div 
                   className="h-full bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full transition-all duration-300"
-                  style={{ width: `${(user.xp / 400) * 100}%` }}
+                  style={{ width: `${(user.xp / 600) * 100}%` }}
                 />
               </div>
               {isHatching && <span className="text-yellow-400">🥚 Hatching...</span>}
@@ -400,7 +400,7 @@ export default function Dashboard() {
                 fill="url(#shadowGradient)" 
                 opacity={shadowOpacity}
                 style={{
-                  transform: `scale(${1 + eggScale * 0.15})`, // Increased shadow scale effect
+                  transform: `scale(${1 + eggScale * 0.15})`,
                   transformOrigin: 'center'
                 }}
               />
@@ -419,7 +419,7 @@ export default function Dashboard() {
                   fill="url(#eggGradient)"
                   filter="url(#bumpMap)"
                   style={{
-                    transform: isHatching ? `rotate(${Math.sin(Date.now() * 0.015) * 5}deg)` : 'none', // Increased rotation amplitude and frequency
+                    transform: isHatching ? `rotate(${Math.sin(Date.now() * 0.015) * 5}deg)` : 'none',
                     transformOrigin: 'center'
                   }}
                 />
@@ -627,7 +627,7 @@ export default function Dashboard() {
               {/* Magical energy effects */}
               {isHatching && (
                 <g>
-                  {[...Array(12)].map((_, i) => ( // Increased to 12 particles
+                  {[...Array(12)].map((_, i) => (
                     <circle
                       key={i}
                       cx={200 + Math.cos(i * Math.PI / 6) * 80}
