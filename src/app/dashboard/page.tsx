@@ -250,17 +250,17 @@ export default function Dashboard() {
   const rimLightOpacity = 0.6 + Math.sin(Date.now() * 0.004) * 0.4;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 relative overflow-hidden">
       <div className="absolute inset-0 pointer-events-none">
-        {[...Array(20)].map((_, i) => (
+        {[...Array(40)].map((_, i) => (
           <div
             key={i}
-            className="absolute w-1 h-1 bg-white rounded-full opacity-20"
+            className="absolute w-1 h-1 bg-blue-400/20 rounded-full animate-pulse"
             style={{
-              left: `${Math.random() * 400}px`,
-              top: `${Math.random() * 400}px`,
-              animation: `float ${3 + Math.random() * 4}s ease-in-out infinite`,
-              animationDelay: `${Math.random() * 2}s`
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 2}s`,
+              animationDuration: `${2 + Math.random() * 3}s`
             }}
           />
         ))}
@@ -275,7 +275,7 @@ export default function Dashboard() {
         >
           {authUser ? (
             <>
-              <h1 className="text-5xl font-black bg-gradient-to-r from-blue-400 via-purple-400 to-emerald-400 bg-clip-text text-transparent mb-2">
+              <h1 className="text-6xl font-black text-gradient mb-2">
                 {authUser.username}
               </h1>
               <div className="flex justify-center items-center gap-4 text-gray-300 text-lg">
@@ -300,7 +300,7 @@ export default function Dashboard() {
             </>
           ) : (
             <>
-              <h1 className="text-5xl font-black bg-gradient-to-r from-blue-400 via-purple-400 to-emerald-400 bg-clip-text text-transparent mb-2">
+              <h1 className="text-6xl font-black text-gradient mb-2">
                 Welcome to Tough Turtle
               </h1>
               <div className="flex justify-center items-center gap-4 text-gray-300 text-lg">

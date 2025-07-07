@@ -44,18 +44,34 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-800 to-emerald-900 text-white">
-      <div className="p-4 text-center flex flex-col items-center justify-center min-h-screen">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white relative overflow-hidden">
+      {/* Modern floating particles */}
+      <div className="absolute inset-0 pointer-events-none">
+        {[...Array(30)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-1 h-1 bg-blue-400/20 rounded-full animate-pulse"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 2}s`,
+              animationDuration: `${2 + Math.random() * 3}s`
+            }}
+          />
+        ))}
+      </div>
+      
+      <div className="relative z-10 p-4 text-center flex flex-col items-center justify-center min-h-screen">
         <motion.div
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="mb-8"
         >
-          <h1 className="text-6xl font-black bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent mb-2 tracking-tight">
+          <h1 className="text-7xl font-black text-gradient mb-2 tracking-tight">
             🐢 TOUGH TURTLE
           </h1>
-          <p className="text-xl text-gray-300 font-semibold tracking-wide">Train Your Turtle. Transform Your Life.</p>
+          <p className="text-2xl text-gray-300 font-semibold tracking-wide">Train Your Turtle. Transform Your Life.</p>
         </motion.div>
 
         <motion.div
@@ -306,11 +322,11 @@ export default function Home() {
 
         <motion.button
           onClick={handleButtonClick}
-          className="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white font-black py-5 px-10 rounded-full text-xl shadow-2xl transform transition-all duration-200 hover:scale-105 hover:shadow-orange-500/25 border-2 border-orange-400/50 mb-16"
+          className="btn-modern bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white font-black py-6 px-12 rounded-2xl text-xl shadow-2xl transform transition-all duration-300 hover:scale-105 hover:shadow-orange-500/25 border border-orange-400/50 mb-16 glass-strong"
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          whileHover={{ scale: 1.05 }}
+          whileHover={{ scale: 1.05, y: -2 }}
           whileTap={{ scale: 0.95 }}
         >
           💥 UNLEASH YOUR POTENTIAL
@@ -324,14 +340,14 @@ export default function Home() {
         transition={{ duration: 0.8 }}
         viewport={{ once: true }}
       >
-        <div className="bg-gradient-to-br from-slate-800/60 to-emerald-900/40 backdrop-blur-sm rounded-3xl p-8 border border-emerald-500/20 shadow-2xl">
-          <h2 className="text-3xl font-black mb-6 bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent">
+        <div className="card-modern glass-strong rounded-3xl p-8 shadow-2xl">
+          <h2 className="text-3xl font-black mb-6 text-gradient-warm">
             💥 FORGE A MINDSET. BUILD A BODY. LEVEL UP YOUR SHELL.
           </h2>
           <p className="text-lg text-gray-200 leading-relaxed mb-6">
             This isn&apos;t just another fitness app. It&apos;s your arena for growth, challenge, and evolution. Every habit strengthens your digital warrior—and your real-world self.
           </p>
-          <div className="bg-black/30 backdrop-blur-sm rounded-2xl p-6 border-l-4 border-orange-500">
+          <div className="glass rounded-2xl p-6 border-l-4 border-orange-500">
             <p className="text-gray-300 italic text-lg leading-relaxed">
               &quot;You are in danger of living a life so comfortable and soft, that you will die without ever realizing your true potential.&quot;
             </p>
@@ -347,14 +363,14 @@ export default function Home() {
         transition={{ duration: 0.8 }}
         viewport={{ once: true }}
       >
-        <h2 className="text-4xl font-black text-center mb-12 bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+        <h2 className="text-4xl font-black text-center mb-12 text-gradient">
           💪 NURTURE YOUR INNER BEAST
         </h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature, index) => (
             <motion.div
               key={index}
-              className="bg-gradient-to-br from-slate-800/60 to-gray-900/40 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 hover:border-emerald-500/50 transition-all duration-300 group hover:scale-105"
+              className="card-modern glass rounded-2xl p-6 hover:border-emerald-500/50 transition-all duration-300 group hover:scale-105 hover:shadow-emerald-500/10"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
@@ -378,8 +394,8 @@ export default function Home() {
         transition={{ duration: 0.8 }}
         viewport={{ once: true }}
       >
-        <div className="bg-gradient-to-br from-purple-900/40 to-indigo-900/40 backdrop-blur-sm rounded-3xl p-8 border border-purple-500/20 shadow-2xl">
-          <h2 className="text-4xl font-black text-center mb-8 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+        <div className="card-modern glass-strong rounded-3xl p-8 shadow-2xl border-purple-500/20">
+          <h2 className="text-4xl font-black text-center mb-8 text-gradient">
             🧠 DOING DOPAMINE DIFFERENTLY
           </h2>
           <p className="text-lg text-gray-200 text-center mb-8 leading-relaxed">
@@ -389,7 +405,7 @@ export default function Home() {
             {principles.map((principle, index) => (
               <motion.div
                 key={index}
-                className="flex items-center gap-3 bg-black/30 backdrop-blur-sm rounded-xl p-4 border border-purple-500/30"
+                className="flex items-center gap-3 glass rounded-xl p-4 border border-purple-500/30"
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
@@ -410,14 +426,14 @@ export default function Home() {
         transition={{ duration: 0.8 }}
         viewport={{ once: true }}
       >
-        <div className="bg-gradient-to-br from-red-900/40 to-orange-900/40 backdrop-blur-sm rounded-3xl p-8 border border-red-500/20 shadow-2xl text-center">
-          <h2 className="text-4xl font-black mb-6 bg-gradient-to-r from-red-400 to-orange-400 bg-clip-text text-transparent">
+        <div className="card-modern glass-strong rounded-3xl p-8 shadow-2xl border-red-500/20 text-center">
+          <h2 className="text-4xl font-black mb-6 text-gradient-warm">
             ⚔️ OUTLAST. OUTLIFT. OUTLEVEL.
           </h2>
           <p className="text-lg text-gray-200 mb-6 leading-relaxed">
             It&apos;s not social media. It&apos;s <span className="text-red-400 font-bold">social stamina</span>. Cheer on rivals. Hype your squad. Unlock badge-worthy habits. Fuel real connection through competition, grit, and growth—not likes.
           </p>
-          <div className="bg-black/30 backdrop-blur-sm rounded-2xl p-6 inline-block">
+          <div className="glass rounded-2xl p-6 inline-block">
             <p className="text-xl font-bold text-orange-400">
               Tough Turtle isn&apos;t about vanity metrics.<br />
               It&apos;s about becoming <span className="text-red-400">unbreakable</span>, one rep at a time.
@@ -434,7 +450,7 @@ export default function Home() {
         viewport={{ once: true }}
       >
         <div className="max-w-2xl mx-auto">
-          <h2 className="text-5xl font-black mb-8 bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent">
+          <h2 className="text-5xl font-black mb-8 text-gradient">
             🚀 START YOUR SHELLQUEST
           </h2>
           <p className="text-xl text-gray-300 mb-8 leading-relaxed">
@@ -443,7 +459,7 @@ export default function Home() {
           </p>
           <motion.button
             onClick={handleButtonClick}
-            className="bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-700 hover:to-cyan-700 text-white font-black py-6 px-12 rounded-full text-2xl shadow-2xl transform transition-all duration-200 hover:scale-105 hover:shadow-emerald-500/25 border-2 border-emerald-400/50"
+            className="btn-modern bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-700 hover:to-cyan-700 text-white font-black py-6 px-12 rounded-2xl text-2xl shadow-2xl transform transition-all duration-300 hover:scale-105 hover:shadow-emerald-500/25 border border-emerald-400/50 glass-strong"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
