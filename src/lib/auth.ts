@@ -1,5 +1,4 @@
 import { supabase } from './supabase';
-import { supabaseAdmin } from './supabase-server';
 
 export interface User {
   id: string;
@@ -14,47 +13,26 @@ export interface User {
 export const auth = {
   async signUp(email: string, password: string, username: string) {
     try {
-      console.log('Attempting signup with:', { email, username });
+      console.log('Client: Attempting signup with:', { email, username });
       
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            username,
-          },
+      const response = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
+        body: JSON.stringify({ email, password, username }),
       });
 
-      console.log('Supabase signup response:', { data, error });
+      const result = await response.json();
 
-      if (error) {
-        console.error('Supabase auth error:', error);
-        throw new Error(`Authentication failed: ${error.message}`);
+      if (!response.ok) {
+        throw new Error(result.error || 'Signup failed');
       }
 
-      if (data.user) {
-        console.log('Creating user profile...');
-        const { error: profileError } = await supabaseAdmin.from('users').insert({
-          id: data.user.id,
-          email: data.user.email!,
-          username,
-          xp: 0,
-          stage: 'Batchling Hatchling',
-          skin: 'default',
-        });
-
-        if (profileError) {
-          console.error('Profile creation error:', profileError);
-          throw new Error(`Profile creation failed: ${profileError.message}`);
-        }
-        
-        console.log('User profile created successfully');
-      }
-
-      return data;
+      console.log('Client: Signup successful');
+      return result.data;
     } catch (error) {
-      console.error('Signup error:', error);
+      console.error('Client: Signup error:', error);
       throw error;
     }
   },
