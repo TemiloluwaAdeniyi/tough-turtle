@@ -8,6 +8,10 @@ import AuthModal from '@/components/Auth/AuthModal';
 import ExerciseTracker from '@/components/ActivityTracker/ExerciseTracker';
 import SleepTracker from '@/components/ActivityTracker/SleepTracker';
 import BiohackingTracker from '@/components/ActivityTracker/BiohackingTracker';
+import StravaConnect from '@/components/Strava/StravaConnect';
+import StravaActivityFeed from '@/components/Strava/StravaActivityFeed';
+import StravaChallengeVerification from '@/components/Strava/StravaChallengeVerification';
+import SupabaseTest from '@/components/Debug/SupabaseTest';
 
 interface Challenge {
   id: string;
@@ -56,7 +60,7 @@ export default function Dashboard() {
     { username: 'FlowStateWarrior', xp: 95, streak: 2 },
   ]);
 
-  const [activeTab, setActiveTab] = useState<'overview' | 'challenges' | 'track' | 'biometrics'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'challenges' | 'track' | 'biometrics' | 'strava' | 'debug'>('overview');
   const [challengeInput, setChallengeInput] = useState<{ [key: string]: string }>({});
   const [isBlinking, setIsBlinking] = useState(false);
   const [mood, setMood] = useState<'determined' | 'focused' | 'pumped' | 'resilient' | 'beast_mode'>('determined');
@@ -227,20 +231,29 @@ export default function Dashboard() {
             value={challengeInput[challenge.id] || ''}
             onChange={(e) => setChallengeInput(prev => ({ ...prev, [challenge.id]: e.target.value }))}
             placeholder={`Add ${challenge.unit}...`}
-            className="flex-1 bg-white/10 border border-white/20 rounded-xl px-4 py-2 text-white placeholder-gray-400 focus:border-blue-400 focus:outline-none transition-colors"
+            className="flex-1 glass border border-white/20 rounded-xl px-4 py-2 text-white placeholder-gray-400 focus:border-blue-400 focus:outline-none transition-colors"
           />
           <motion.button
             onClick={() => {
               const value = parseFloat(challengeInput[challenge.id] || '0');
               if (value > 0) updateChallenge(challenge.id, challenge.current + value);
             }}
-            className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-2 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all"
+            className="btn-modern bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-2 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all glass-strong"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             Log
           </motion.button>
         </div>
+
+        <StravaChallengeVerification
+          challenge={challenge}
+          onVerificationComplete={(verified, progress) => {
+            if (verified) {
+              updateChallenge(challenge.id, progress);
+            }
+          }}
+        />
       </motion.div>
     );
   };
@@ -672,7 +685,7 @@ export default function Dashboard() {
         {authUser && (
           <div className="flex justify-center mb-8">
             <div className="bg-black/30 backdrop-blur-xl rounded-2xl p-2 border border-white/10">
-              {(['overview', 'challenges', 'track', 'biometrics'] as const).map((tab) => (
+              {(['overview', 'challenges', 'track', 'biometrics', 'strava', 'debug'] as const).map((tab) => (
                 <motion.button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
@@ -786,6 +799,27 @@ export default function Dashboard() {
             </motion.div>
           )}
 
+          {authUser && activeTab === 'strava' && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="grid grid-cols-1 lg:grid-cols-2 gap-8"
+            >
+              <StravaConnect />
+              <StravaActivityFeed />
+            </motion.div>
+          )}
+
+          {authUser && activeTab === 'debug' && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="max-w-4xl mx-auto"
+            >
+              <SupabaseTest />
+            </motion.div>
+          )}
+
           {!authUser && (
             <motion.div
               initial={{ opacity: 0 }}
@@ -799,10 +833,15 @@ export default function Dashboard() {
               </p>
               <button
                 onClick={() => setShowAuthModal(true)}
-                className="px-8 py-3 bg-gradient-to-r from-emerald-500 to-blue-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all"
+                className="px-8 py-3 bg-gradient-to-r from-emerald-500 to-blue-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all btn-modern glass-strong mb-8"
               >
                 Get Started
               </button>
+              
+              <div className="mt-16">
+                <h3 className="text-lg font-semibold text-white mb-4">Having trouble signing up?</h3>
+                <SupabaseTest />
+              </div>
             </motion.div>
           )}
         </div>

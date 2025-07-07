@@ -22,9 +22,20 @@ export default function SignUpForm({ onToggle }: SignUpFormProps) {
     setError('');
 
     try {
+      console.log('Form submission started');
       await signUp(email, password, username);
+      console.log('Signup successful');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      console.error('Form submission error:', err);
+      if (err instanceof Error) {
+        if (err.message.includes('fetch')) {
+          setError('Network error: Unable to connect to server. Please check your internet connection.');
+        } else {
+          setError(err.message);
+        }
+      } else {
+        setError('An unexpected error occurred. Please try again.');
+      }
     } finally {
       setLoading(false);
     }

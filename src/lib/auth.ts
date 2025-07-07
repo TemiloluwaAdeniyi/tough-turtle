@@ -12,32 +12,50 @@ export interface User {
 
 export const auth = {
   async signUp(email: string, password: string, username: string) {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          username,
+    try {
+      console.log('Attempting signup with:', { email, username });
+      
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            username,
+          },
         },
-      },
-    });
-
-    if (error) throw error;
-
-    if (data.user) {
-      const { error: profileError } = await supabase.from('users').insert({
-        id: data.user.id,
-        email: data.user.email!,
-        username,
-        xp: 0,
-        stage: 'Batchling Hatchling',
-        skin: 'default',
       });
 
-      if (profileError) throw profileError;
-    }
+      console.log('Supabase signup response:', { data, error });
 
-    return data;
+      if (error) {
+        console.error('Supabase auth error:', error);
+        throw new Error(`Authentication failed: ${error.message}`);
+      }
+
+      if (data.user) {
+        console.log('Creating user profile...');
+        const { error: profileError } = await supabase.from('users').insert({
+          id: data.user.id,
+          email: data.user.email!,
+          username,
+          xp: 0,
+          stage: 'Batchling Hatchling',
+          skin: 'default',
+        });
+
+        if (profileError) {
+          console.error('Profile creation error:', profileError);
+          throw new Error(`Profile creation failed: ${profileError.message}`);
+        }
+        
+        console.log('User profile created successfully');
+      }
+
+      return data;
+    } catch (error) {
+      console.error('Signup error:', error);
+      throw error;
+    }
   },
 
   async signIn(email: string, password: string) {
@@ -85,7 +103,7 @@ export const auth = {
   },
 
   onAuthStateChange(callback: (user: User | null) => void) {
-    return supabase.auth.onAuthStateChange(async (event, session) => {
+    return supabase.auth.onAuthStateChange(async (_event, session) => {
       if (session?.user) {
         try {
           const user = await this.getUser();
