@@ -61,7 +61,10 @@ export const auth = {
       .eq('id', authData.user.id)
       .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error('Error fetching user profile:', error);
+      throw new Error(`Failed to fetch user profile: ${error.message}`);
+    }
     return userData;
   },
 

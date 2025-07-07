@@ -49,6 +49,9 @@ export async function POST(request: NextRequest) {
       console.log('API: User profile created successfully');
     }
 
+    // Small delay to ensure profile is fully created
+    await new Promise(resolve => setTimeout(resolve, 100));
+
     return NextResponse.json({ success: true, data });
   } catch (error) {
     console.error('API: Signup error:', error);
