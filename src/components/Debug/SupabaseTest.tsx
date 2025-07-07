@@ -110,7 +110,11 @@ export default function SupabaseTest() {
         <div className="text-xs text-gray-400 mt-4">
           <p><strong>Environment Check:</strong></p>
           <p>Supabase URL: {process.env.NEXT_PUBLIC_SUPABASE_URL ? '✅ Set' : '❌ Missing'}</p>
+          <p>URL Value: {process.env.NEXT_PUBLIC_SUPABASE_URL || 'undefined'}</p>
           <p>Supabase Key: {process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? '✅ Set' : '❌ Missing'}</p>
+          <p>Key Preview: {process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? `${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY.substring(0, 20)}...` : 'undefined'}</p>
+          <p>Environment: {typeof window !== 'undefined' ? 'Client' : 'Server'}</p>
+          <p>Domain: {typeof window !== 'undefined' ? window.location.origin : 'Server-side'}</p>
         </div>
       </div>
     </div>
