@@ -13,9 +13,11 @@
     "chart": "^0.1.2",
     "framer-motion": "^12.19.2",
     "next": "15.3.4",
+    "next-pwa": "^5.6.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "supabase": "^2.26.9"
+    "supabase": "^2.26.9",
+    "workbox-webpack-plugin": "^7.3.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
