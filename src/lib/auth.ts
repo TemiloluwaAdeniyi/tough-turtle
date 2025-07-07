@@ -1,4 +1,4 @@
-import { supabase } from './supabase';
+import { supabase, supabaseAdmin } from './supabase';
 
 export interface User {
   id: string;
@@ -34,7 +34,7 @@ export const auth = {
 
       if (data.user) {
         console.log('Creating user profile...');
-        const { error: profileError } = await supabase.from('users').insert({
+        const { error: profileError } = await supabaseAdmin.from('users').insert({
           id: data.user.id,
           email: data.user.email!,
           username,
