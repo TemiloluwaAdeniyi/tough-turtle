@@ -1,16 +1,13 @@
 "use client";
 
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
-
-interface User {
-  id: string;
-  xp: number;
-  stage: string;
-  skin: string;
-  username: string;
-  skin_expiry: string | null;
-}
+import { useCallback, useEffect, useState } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
+import { challenges } from '@/lib/challenges';
+import AuthModal from '@/components/Auth/AuthModal';
+import ExerciseTracker from '@/components/ActivityTracker/ExerciseTracker';
+import SleepTracker from '@/components/ActivityTracker/SleepTracker';
+import BiohackingTracker from '@/components/ActivityTracker/BiohackingTracker';
 
 interface Challenge {
   id: string;
@@ -39,22 +36,9 @@ interface BiometricData {
 }
 
 export default function Dashboard() {
-  const [user, setUser] = useState<User>({
-    id: 'biohacker-1',
-    xp: 0,
-    stage: 'Baseline Human',
-    skin: 'cybernetic',
-    username: 'Josh42',
-    skin_expiry: null,
-  });
-
-  const [challenges, setChallenges] = useState<Challenge[]>([
-    { id: '1', type: 'sleep', title: 'Deep Sleep Protocol', target: 8, current: 7.2, unit: 'hrs', completed: false, streak: 3, icon: '🧠' },
-    { id: '2', type: 'strength', title: 'Power Lifting Circuit', target: 5, current: 3, unit: 'sets', completed: false, streak: 1, icon: '💪' },
-    { id: '3', type: 'cardio', title: 'Zone 2 Endurance', target: 45, current: 32, unit: 'min', completed: false, streak: 5, icon: '🏃' },
-    { id: '4', type: 'hydration', title: 'Optimal H2O Protocol', target: 3.5, current: 2.8, unit: 'L', completed: false, streak: 2, icon: '💧' },
-    { id: '5', type: 'meditation', title: 'Mindfulness Flow', target: 20, current: 15, unit: 'min', completed: false, streak: 7, icon: '🧘' },
-  ]);
+  const { user: authUser, signOut } = useAuth();
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [userChallenges, setUserChallenges] = useState<Challenge[]>([]);
 
   const [biometrics] = useState<BiometricData>({
     heartRate: 62,
@@ -72,7 +56,7 @@ export default function Dashboard() {
     { username: 'FlowStateWarrior', xp: 95, streak: 2 },
   ]);
 
-  const [activeTab, setActiveTab] = useState<'overview' | 'challenges' | 'battles' | 'biometrics'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'challenges' | 'track' | 'biometrics'>('overview');
   const [challengeInput, setChallengeInput] = useState<{ [key: string]: string }>({});
   const [isBlinking, setIsBlinking] = useState(false);
   const [mood, setMood] = useState<'determined' | 'focused' | 'pumped' | 'resilient' | 'beast_mode'>('determined');
@@ -80,12 +64,46 @@ export default function Dashboard() {
   const [crackLevel, setCrackLevel] = useState(0);
   const [lightIntensity, setLightIntensity] = useState(1);
 
-  useEffect(() => {
-    const newStage = getTurtleStage(user.xp);
-    if (newStage !== user.stage) {
-      setUser(prev => ({ ...prev, stage: newStage }));
-    }
+  const getIconForType = useCallback((type: string) => {
+    const icons = {
+      cardio: '🏃',
+      strength: '💪',
+      sleep: '😴',
+      hydration: '💧',
+      meditation: '🧘'
+    };
+    return icons[type as keyof typeof icons] || '⭐';
+  }, []);
 
+  const loadUserData = useCallback(async () => {
+    if (!authUser) return;
+    
+    try {
+      const challengesData = await challenges.getUserChallenges(authUser.id);
+      
+      setUserChallenges(challengesData.map(c => ({
+        id: c.id,
+        type: c.type,
+        title: c.name,
+        target: c.target,
+        current: c.progress,
+        unit: c.unit,
+        completed: c.completed,
+        streak: c.streak,
+        icon: getIconForType(c.type)
+      })));
+    } catch (error) {
+      console.error('Error loading user data:', error);
+    }
+  }, [authUser, getIconForType]);
+
+  useEffect(() => {
+    if (authUser) {
+      loadUserData();
+    }
+  }, [authUser, loadUserData]);
+
+  useEffect(() => {
     const blinkInterval = setInterval(() => {
       setIsBlinking(true);
       setTimeout(() => setIsBlinking(false), 150);
@@ -97,7 +115,6 @@ export default function Dashboard() {
     }, 4000);
 
     const xpInterval = setInterval(() => {
-      setUser(prev => ({ ...prev, xp: Math.min(prev.xp + 2, 600) }));
       setLightIntensity(0.8 + Math.sin(Date.now() * 0.003) * 0.2);
     }, 100);
 
@@ -106,38 +123,29 @@ export default function Dashboard() {
       clearInterval(moodInterval);
       clearInterval(xpInterval);
     };
-  }, [user.xp, user.stage]);
+  }, []);
 
   useEffect(() => {
-    if (user.xp >= 150 && user.xp < 300) {
+    if (!authUser) return;
+    
+    if (authUser.xp >= 150 && authUser.xp < 300) {
       setIsHatching(true);
-      setCrackLevel(Math.floor((user.xp - 150) / 30));
-    } else if (user.xp >= 300) {
+      setCrackLevel(Math.floor((authUser.xp - 150) / 30));
+    } else if (authUser.xp >= 300) {
       setIsHatching(false);
       setCrackLevel(5);
     }
-  }, [user.xp]);
+  }, [authUser]);
 
-  const updateChallenge = (challengeId: string, value: number) => {
-    setChallenges(prev => prev.map(challenge => {
-      if (challenge.id === challengeId) {
-        const newCurrent = Math.min(value, challenge.target);
-        const completed = newCurrent >= challenge.target;
-        const xpGain = completed && !challenge.completed ? 25 : 0;
-        
-        if (xpGain > 0) {
-          setUser(u => ({ ...u, xp: u.xp + xpGain }));
-        }
-        
-        return {
-          ...challenge,
-          current: newCurrent,
-          completed,
-          streak: completed ? challenge.streak + 1 : challenge.streak
-        };
-      }
-      return challenge;
-    }));
+  const updateChallenge = async (challengeId: string, value: number) => {
+    if (!authUser) return;
+    
+    try {
+      await challenges.addProgressToChallenge(challengeId, value);
+      await loadUserData();
+    } catch (error) {
+      console.error('Error updating challenge:', error);
+    }
     setChallengeInput(prev => ({ ...prev, [challengeId]: '' }));
   };
 
@@ -145,13 +153,6 @@ export default function Dashboard() {
     return Math.min((current / target) * 100, 100);
   };
 
-  const getTurtleStage = (xp: number) => {
-    if (xp >= 500) return 'Tough Turtle Titan';
-    if (xp >= 300) return 'Shadow Shell';
-    if (xp >= 150) return 'Shelless Seeker';
-    if (xp >= 50) return 'Spry Snapper';
-    return 'Batchling Hatchling';
-  };
 
   const renderBiometricCard = (title: string, value: number | string, unit: string, icon: string, color: string) => (
     <motion.div
@@ -272,22 +273,46 @@ export default function Dashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <h1 className="text-5xl font-black bg-gradient-to-r from-blue-400 via-purple-400 to-emerald-400 bg-clip-text text-transparent mb-2">
-            {user.username}
-          </h1>
-          <div className="flex justify-center items-center gap-4 text-gray-300 text-lg">
-            <span>Level: {user.stage}</span>
-            <div className="flex items-center gap-2">
-              <span>XP: {user.xp}/600</span>
-              <div className="w-24 h-2 bg-gray-700 rounded-full">
-                <div 
-                  className="h-full bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full transition-all duration-300"
-                  style={{ width: `${(user.xp / 600) * 100}%` }}
-                />
+          {authUser ? (
+            <>
+              <h1 className="text-5xl font-black bg-gradient-to-r from-blue-400 via-purple-400 to-emerald-400 bg-clip-text text-transparent mb-2">
+                {authUser.username}
+              </h1>
+              <div className="flex justify-center items-center gap-4 text-gray-300 text-lg">
+                <span>Level: {authUser.stage}</span>
+                <div className="flex items-center gap-2">
+                  <span>XP: {authUser.xp}/600</span>
+                  <div className="w-24 h-2 bg-gray-700 rounded-full">
+                    <div 
+                      className="h-full bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full transition-all duration-300"
+                      style={{ width: `${(authUser.xp / 600) * 100}%` }}
+                    />
+                  </div>
+                  {isHatching && <span className="text-yellow-400">🥚 Hatching...</span>}
+                </div>
+                <button
+                  onClick={signOut}
+                  className="text-sm px-3 py-1 bg-red-500/20 text-red-300 rounded-lg hover:bg-red-500/30 transition-colors"
+                >
+                  Sign Out
+                </button>
               </div>
-              {isHatching && <span className="text-yellow-400">🥚 Hatching...</span>}
-            </div>
-          </div>
+            </>
+          ) : (
+            <>
+              <h1 className="text-5xl font-black bg-gradient-to-r from-blue-400 via-purple-400 to-emerald-400 bg-clip-text text-transparent mb-2">
+                Welcome to Tough Turtle
+              </h1>
+              <div className="flex justify-center items-center gap-4 text-gray-300 text-lg">
+                <button
+                  onClick={() => setShowAuthModal(true)}
+                  className="px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all"
+                >
+                  Sign In / Sign Up
+                </button>
+              </div>
+            </>
+          )}
         </motion.div>
 
         <motion.div
@@ -636,34 +661,38 @@ export default function Dashboard() {
                 {mood === 'beast_mode' && '🦾 BEAST MODE'}
               </span>
             </motion.div>
-            <div className="absolute -top-2 -right-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full px-3 py-1 text-sm font-bold text-white shadow-lg">
-              L{Math.floor(user.xp / 50) + 1}
-            </div>
+            {authUser && (
+              <div className="absolute -top-2 -right-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full px-3 py-1 text-sm font-bold text-white shadow-lg">
+                L{Math.floor(authUser.xp / 50) + 1}
+              </div>
+            )}
           </div>
         </motion.div>
 
-        <div className="flex justify-center mb-8">
-          <div className="bg-black/30 backdrop-blur-xl rounded-2xl p-2 border border-white/10">
-            {(['overview', 'challenges', 'battles', 'biometrics'] as const).map((tab) => (
-              <motion.button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`px-6 py-3 rounded-xl font-semibold capitalize transition-all ${
-                  activeTab === tab
-                    ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'
-                    : 'text-gray-400 hover:text-white'
-                }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                {tab}
-              </motion.button>
-            ))}
+        {authUser && (
+          <div className="flex justify-center mb-8">
+            <div className="bg-black/30 backdrop-blur-xl rounded-2xl p-2 border border-white/10">
+              {(['overview', 'challenges', 'track', 'biometrics'] as const).map((tab) => (
+                <motion.button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`px-6 py-3 rounded-xl font-semibold capitalize transition-all ${
+                    activeTab === tab
+                      ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'
+                      : 'text-gray-400 hover:text-white'
+                  }`}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {tab === 'track' ? 'Track Activity' : tab}
+                </motion.button>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="max-w-7xl mx-auto">
-          {activeTab === 'overview' && (
+          {authUser && activeTab === 'overview' && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -676,17 +705,29 @@ export default function Dashboard() {
             </motion.div>
           )}
 
-          {activeTab === 'challenges' && (
+          {authUser && activeTab === 'challenges' && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
             >
-              {challenges.map(renderChallengeCard)}
+              {userChallenges.map(renderChallengeCard)}
             </motion.div>
           )}
 
-          {activeTab === 'biometrics' && (
+          {authUser && activeTab === 'track' && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="grid grid-cols-1 lg:grid-cols-3 gap-8"
+            >
+              <ExerciseTracker onActivityLogged={loadUserData} />
+              <SleepTracker onActivityLogged={loadUserData} />
+              <BiohackingTracker onActivityLogged={loadUserData} />
+            </motion.div>
+          )}
+
+          {authUser && activeTab === 'biometrics' && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -718,7 +759,7 @@ export default function Dashboard() {
                     <motion.div
                       key={index}
                       className={`flex items-center justify-between p-4 rounded-xl ${
-                        entry.username === user.username 
+                        entry.username === authUser?.username 
                           ? 'bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-400/30' 
                           : 'bg-white/5'
                       }`}
@@ -744,8 +785,30 @@ export default function Dashboard() {
               </div>
             </motion.div>
           )}
+
+          {!authUser && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-center py-20"
+            >
+              <div className="text-6xl mb-6">🐢</div>
+              <h2 className="text-3xl font-bold text-white mb-4">Start Your Journey</h2>
+              <p className="text-gray-300 mb-8 max-w-md mx-auto">
+                Track your exercise, sleep, and biohacking activities. Build habits, earn XP, and transform into a Tough Turtle.
+              </p>
+              <button
+                onClick={() => setShowAuthModal(true)}
+                className="px-8 py-3 bg-gradient-to-r from-emerald-500 to-blue-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all"
+              >
+                Get Started
+              </button>
+            </motion.div>
+          )}
         </div>
       </div>
+
+      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
 
       <style jsx>{`
         @keyframes float {
