@@ -32,7 +32,6 @@ export async function POST(request: NextRequest) {
       console.log('API: Creating user profile...');
       const { error: profileError } = await supabaseAdmin.from('users').insert({
         id: data.user.id,
-        email: data.user.email!,
         username,
         xp: 0,
         stage: 'Batchling Hatchling',

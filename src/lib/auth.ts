@@ -2,7 +2,6 @@ import { supabase } from './supabase';
 
 export interface User {
   id: string;
-  email: string;
   username: string;
   xp: number;
   stage: string;

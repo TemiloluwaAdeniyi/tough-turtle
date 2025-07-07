@@ -14,7 +14,6 @@ export interface Database {
       users: {
         Row: {
           id: string
-          email: string
           username: string
           xp: number
           stage: string
@@ -25,7 +24,6 @@ export interface Database {
         }
         Insert: {
           id: string
-          email: string
           username: string
           xp?: number
           stage?: string
@@ -36,7 +34,6 @@ export interface Database {
         }
         Update: {
           id?: string
-          email?: string
           username?: string
           xp?: number
           stage?: string
