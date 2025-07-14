@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@stripe/react-stripe-js": "^3.7.0",
+    "@stripe/stripe-js": "^7.4.0",
     "@supabase/supabase-js": "^2.50.2",
     "chart": "^0.1.2",
     "framer-motion": "^12.19.2",
@@ -16,6 +18,7 @@
     "next-pwa": "^5.6.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "stripe": "^18.3.0",
     "supabase": "^2.26.9",
     "workbox-webpack-plugin": "^7.3.0"
   },
